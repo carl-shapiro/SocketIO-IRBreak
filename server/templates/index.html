@@ -1,0 +1,53 @@
+<html>
+<head>
+  <script src="http://code.jquery.com/jquery-1.9.1.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/4.0.1/socket.io.js" integrity="sha512-q/dWJ3kcmjBLU4Qc47E4A9kTB4m3wuTY7vkFJDTZKjTs8jhyGQnaUrxa0Ytd0ssMZhbNua9hE+E7Qv1j+DyZwA==" crossorigin="anonymous"></script>
+  <script>
+    let armed = false;
+    let host = "http://raspberrypi";
+    let port = 5000;
+    let alarmSound = "alarm1.mp3";
+
+    var socket = io.connect(host+":" + port, {
+      reconnection: false
+    });
+    socket.on('connect', function(){
+      socket.emit('test_connection', {data: 'Client is connected'});
+    });
+    socket.on('connection_response', function(data){
+      console.log(data)
+    });
+    socket.on('beam_state', function(data){
+      console.log("Beam State",data);
+      if(!data.connected) playAudio();
+    });
+    socket.on('heartbeat', function(data){
+      console.log("Heartbeat:", data);
+    });
+
+    setInterval(heartbeat, 30000);
+
+    function heartbeat(){
+      let timestamp = Math.floor(Date.now() / 1000);
+      socket.emit('heartbeat', {"heartbeat": timestamp});
+    }
+
+    function playAudio(){
+      if(armed){
+        var audio = new Audio('/static/' + alarmSound);
+        audio.play();
+      }
+    }
+</script>
+
+</head>
+<body>
+<h1>IR Break Sound Detector</h1>
+
+<input type="button" name="arm" value="Arm" onClick="armed=true"/>
+</br>
+<input type="button" name="disarm" value="Disarm" onClick="armed=false"/>
+
+</body>
+
+</html>
