@@ -43,8 +43,8 @@ Start the Flask service within an SSH session to the Raspberry Pi:
 flask run --host=0.0.0.0
 ```
 
-On a browser within the network the Raspberry Pi is connected to, open a
-browser and navigate to http://[YOUR_RASPBERRYPI_HOSTNAME]:5000
+On a browser within the network the Raspberry Pi is connected to,  
+navigate to http://[YOUR_RASPBERRYPI_HOSTNAME]:5000
 
 Click the "Arm" button to enable the alarm.
 Click the "Disarm" button to disable the alarm.
